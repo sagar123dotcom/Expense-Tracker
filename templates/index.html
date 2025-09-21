@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Expense Tracker</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>💠 Fabulous Expense Tracker (Web)</h1>
+
+    <!-- Chart Buttons at Top -->
+    <div class="chart-buttons">
+        <button onclick="showChart('cat')">📊 Category Chart</button>
+        <button onclick="showChart('trend')">📈 Monthly Trend</button>
+    </div>
+    <canvas id="chartCanvas" width="400" height="200"></canvas>
+
+    <!-- Add Expense -->
+    <form method="POST" action="/add" class="form-inline">
+        <input type="date" name="date">
+        <input type="text" name="name" placeholder="Name" required>
+        <select name="category" required>
+            {% for c in categories if c != "All" %}
+            <option value="{{c}}">{{c}}</option>
+            {% endfor %}
+        </select>
+        <input type="number" step="0.01" name="amount" placeholder="Amount (₹)" required>
+        <button type="submit">➕ Add</button>
+    </form>
+
+    <!-- Quick Add Income -->
+    <form method="POST" action="/add_income" class="form-inline">
+        <input type="number" step="0.01" name="income_amount" placeholder="Income (₹)">
+        <button type="submit">💰 Add Income</button>
+    </form>
+
+    <!-- Set Goal -->
+    <form method="POST" action="/set_goal" class="form-inline">
+        <input type="number" step="0.01" name="goal" placeholder="Savings Goal (₹)">
+        <button type="submit">🎯 Set Goal</button>
+    </form>
+
+    <!-- Load CSV -->
+    <form method="POST" action="/load" enctype="multipart/form-data" class="form-inline">
+        <input type="file" name="file" accept=".csv">
+        <button type="submit">📂 Load CSV</button>
+    </form>
+
+    <p class="summary">
+        <b>Income:</b> ₹{{ total_inc }} | <b>Expense:</b> ₹{{ total_exp }} |
+        <b>Balance:</b> ₹{{ balance }} | <b>Savings Goal:</b> ₹{{ goal }}
+    </p>
+
+    <!-- Filters -->
+    <form method="GET" action="/" class="form-inline">
+        <select name="cat">
+            {% for c in categories %}
+            <option value="{{c}}" {% if c==selected_cat %}selected{% endif %}>{{c}}</option>
+            {% endfor %}
+        </select>
+        <select name="month">
+            <option>All</option>
+            {% for m in range(1,13) %}
+            <option value="{{m}}">{{m}}</option>
+            {% endfor %}
+        </select>
+        <select name="year">
+            <option>All</option>
+            {% for y in range(2020, 2031) %}
+            <option value="{{y}}">{{y}}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">🔍 Filter</button>
+    </form>
+
+    <!-- Expense Table -->
+    <table>
+        <tr><th>#</th><th>Date</th><th>Name</th><th>Category</th><th>Amount</th><th>Delete</th></tr>
+        {% for e in expenses %}
+        <tr>
+            <td>{{ loop.index0 }}</td>
+            <td>{{ e.Date }}</td>
+            <td>{{ e.Name }}</td>
+            <td>{{ e.Category }}</td>
+            <td>{{ e.Amount }}</td>
+            <td>
+                <form method="POST" action="/delete">
+                    <input type="hidden" name="index" value="{{ loop.index0 }}">
+                    <button type="submit">❌</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <a href="/export" class="btn">💾 Export CSV</a>
+</div>
+
+<script>
+let chart;
+
+function showChart(type) {
+    if(chart) chart.destroy();
+    if(type === "cat") {
+        fetch("/chart_data").then(r=>r.json()).then(data=>{
+            chart = new Chart(document.getElementById("chartCanvas"), {
+                type: "bar",
+                data: {
+                    labels: Object.keys(data),
+                    datasets: [{ label:"Amount (₹)", data:Object.values(data), backgroundColor:"lightgreen"}]
+                }
+            });
+        });
+    } else if(type === "trend") {
+        fetch("/monthly_trend").then(r=>r.json()).then(data=>{
+            chart = new Chart(document.getElementById("chartCanvas"), {
+                type: "line",
+                data: {
+                    labels: Object.keys(data),
+                    datasets: [{ label:"Expense (₹)", data:Object.values(data), borderColor:"yellow", fill:false }]
+                }
+            });
+        });
+    }
+}
+</script>
+</body>
+</html>

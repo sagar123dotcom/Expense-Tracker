@@ -1,0 +1,98 @@
+/* Full Page Background */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    color: #fff;
+    background: royalblue url("https://images.unsplash.com/photo-1522199755839-a2bacb67c546") no-repeat center center fixed;
+    background-size: cover;
+}
+
+/* Container */
+.container {
+    width: 90%;
+    max-width: 1000px;
+    margin: 20px auto;
+    background: rgba(0, 0, 70, 0.75); /* royal blue semi-transparent */
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.5);
+}
+
+/* Title */
+h1 {
+    color: #ffdf00;
+    text-align: center;
+}
+
+/* Forms */
+form { margin: 10px 0; }
+.form-inline input, .form-inline select, .form-inline button {
+    margin: 5px;
+    padding: 6px;
+    border-radius: 6px;
+    border: none;
+}
+input, select { padding: 6px; border: 1px solid #ccc; }
+button {
+    background: #ffdf00;
+    color: black;
+    font-weight: bold;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+button:hover { background: #ffc107; }
+
+/* Table */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    background: white;
+    color: black;
+}
+table th, table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+}
+table th {
+    background: #002147;
+    color: white;
+}
+
+/* Summary */
+.summary {
+    margin: 10px 0;
+    font-weight: bold;
+    color: #ffdf00;
+}
+
+/* Buttons */
+.btn {
+    display: inline-block;
+    margin-top: 10px;
+    background: #00ffcc;
+    padding: 8px 12px;
+    color: black;
+    text-decoration: none;
+    border-radius: 6px;
+}
+.btn:hover { background: #00ccaa; }
+
+.chart-buttons {
+    margin: 20px 0;
+    text-align: center;
+}
+.chart-buttons button {
+    margin: 5px;
+    padding: 10px 15px;
+    background: #1dd3b0;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+}
+.chart-buttons button:hover { background: #16a085; }
